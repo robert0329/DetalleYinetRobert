@@ -108,7 +108,7 @@ namespace DetalleCotizaciones.BLL
 
             return cc;
         }
-       
+
         public static List<Cotizaciones> GetLista()
         {
             var lista = new List<Cotizaciones>();

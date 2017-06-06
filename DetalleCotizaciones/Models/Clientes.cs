@@ -17,10 +17,7 @@ namespace DetalleCotizaciones.Models
         public string Telefono { get; set; }
         public string Celular { get; set; }
         public int LimiteCredito { get; set; }
-
-
         public virtual ICollection<Cotizaciones> Cotizaciones { get; set; }
-
 
         public Clientes()
         {

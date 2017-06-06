@@ -10,23 +10,58 @@ namespace DetalleCotizaciones.BLL
 {
     public class DetalleCotizacionesBLL
     {
-        public static bool Guardar(CotizacionesDetalle deta)
+        public static bool Guardar(CotizacionesDetalle detalle)
         {
-            bool retorno = false;
+            bool resultado = false;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    conexion.Cotice.Add(detalle);
+                    conexion.SaveChanges();
+                    resultado = true;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return resultado;
+        }
+        public static List<CotizacionesDetalle> Listar()
+        {
+            List<CotizacionesDetalle> listado = null;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    listado = conexion.Cotice.ToList();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return listado;
+        }
+        public static bool Insertar(List<CotizacionesDetalle> detalles)
+        {
+            bool resultado = false;
             try
             {
-                using (var db = new CotizacionesDb())
+                foreach (CotizacionesDetalle detail in detalles)
                 {
-                    db.Cotice.Add(deta);
-                    db.SaveChanges();
+                    resultado = Guardar(detail);
                 }
-                retorno = true;
             }
             catch (Exception)
             {
+
                 throw;
             }
-            return retorno;
+            return resultado;
         }
     }
 }
