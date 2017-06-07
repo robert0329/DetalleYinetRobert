@@ -13,15 +13,11 @@ namespace DetalleCotizaciones.Controllers
 {
     public class CotizacionDetallesController : Controller
     {
-        private CotizacionesDb db = new CotizacionesDb();
-
-        // GET: CotizacionDetalles
+        private CotizacionesDb db = new CotizacionesDb();       
         public ActionResult Index()
         {
             return View(BLL.DetalleCotizacionesBLL.Listar());
-        }
-
-        // GET: CotizacionDetalles/Details/5
+        }        
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -34,21 +30,15 @@ namespace DetalleCotizaciones.Controllers
                 return HttpNotFound();
             }
             return View(cotizacionDetalles);
-        }
-
-        // GET: CotizacionDetalles/Create
+        }       
         public ActionResult Create()
         {
             ViewBag.CotizacionId = new SelectList(db.Cotizacion, "CotizacionId", "Cliente");
             return View();
-        }
-
-        // POST: CotizacionDetalles/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        }     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CotizacionDetalleId,CotizacionId,ArticuloId,Articulo,Cantidad,PrecXund,SubTotal")] CotizacionDetalles cotizacionDetalles)
+        public ActionResult Create([Bind(Include = "CotizacionDetalleId,CotizacionId,ProductoId,Produto,Cantidad,SubTotal")] CotizacionDetalles cotizacionDetalles)
         {
             if (ModelState.IsValid)
             {
@@ -59,16 +49,12 @@ namespace DetalleCotizaciones.Controllers
             ViewBag.CotizacionId = new SelectList(db.Cotizacion, "CotizacionId", "Cliente", cotizacionDetalles.CotizacionId);
             return View(cotizacionDetalles);
         }
-
-        //[HttpPost]
-        public JsonResult Guardar(List<CotizacionDetalles> detalles)
+        public JsonResult Save(List<CotizacionDetalles> detalles)
         {
-            bool resultado = BLL.DetalleCotizacionesBLL.Guardar(detalles);
+            bool resultado = BLL.DetalleCotizacionesBLL.Save(detalles);
 
             return Json(resultado, JsonRequestBehavior.AllowGet);
-        }
-
-        // GET: CotizacionDetalles/Edit/5
+        }    
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -83,13 +69,9 @@ namespace DetalleCotizaciones.Controllers
             ViewBag.CotizacionId = new SelectList(db.Cotizacion, "CotizacionId", "Cliente", cotizacionDetalles.CotizacionId);
             return View(cotizacionDetalles);
         }
-
-        // POST: CotizacionDetalles/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CotizacionDetalleId,CotizacionId,ArticuloId,Articulo,Cantidad,PrecXund,SubTotal")] CotizacionDetalles cotizacionDetalles)
+        public ActionResult Edit([Bind(Include = "CotizacionDetalleId,CotizacionId,ProductoId,Producto,Cantidad,SubTotal")] CotizacionDetalles cotizacionDetalles)
         {
             if (ModelState.IsValid)
             {
@@ -98,9 +80,7 @@ namespace DetalleCotizaciones.Controllers
             }
             ViewBag.CotizacionId = new SelectList(db.Cotizacion, "CotizacionId", "Cliente", cotizacionDetalles.CotizacionId);
             return View(cotizacionDetalles);
-        }
-
-        // GET: CotizacionDetalles/Delete/5
+        }       
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -113,9 +93,7 @@ namespace DetalleCotizaciones.Controllers
                 return HttpNotFound();
             }
             return View(cotizacionDetalles);
-        }
-
-        // POST: CotizacionDetalles/Delete/5
+        }     
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -124,7 +102,6 @@ namespace DetalleCotizaciones.Controllers
             BLL.DetalleCotizacionesBLL.Eliminar(cotizacionDetalles);
             return RedirectToAction("Index");
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

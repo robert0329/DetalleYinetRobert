@@ -101,22 +101,13 @@ namespace DetalleCotizaciones.BLL
             }
             return listado;
         }
-
-        public static bool Guardar(List<CotizacionDetalles> detalles)
+        public static bool Save(List<CotizacionDetalles> detalles)
         {
             bool resultado = false;
-            try
+            foreach (CotizacionDetalles detail in detalles)
             {
-                foreach (CotizacionDetalles detail in detalles)
-                {
-                    resultado = Guardar(detail);
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+                resultado = Guardar(detail);
+            }           
             return resultado;
         }
     }

@@ -21,19 +21,11 @@ namespace DetalleCotizaciones.Models
 
         [DataType(DataType.Currency)]
         public double Monto { get; set; }
-
-        //public virtual Productos product { get; set; }
-        //public virtual Clientes Cliente { get; set; }
-        //public virtual ICollection<CotizacionesDetalle> Detalle { get; set; }
-
+        
         public Cotizaciones()
         {
-            //this.Detalle = new HashSet<CotizacionesDetalle>();
+            
         }
-
-        //public void AgregarDetalle(Productos producto, decimal cantidad)
-        //{
-        //    this.Detalle.Add(new CotizacionesDetalle(producto.ProductoId, cantidad, producto.Precio, producto.Descripcion));
-        //}
+        
     }
 }

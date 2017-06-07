@@ -27,13 +27,13 @@
         </div>
         <div class="form-group" size="100">
             <div class="form-group col-12">
-                <label class="control-label">Articulo:</label>
-                <input class="form-control input-group-sm col-2" type="text" id="tbArticulo" />
+                <label class="control-label">Producto:</label>
+                <input class="form-control input-group-sm col-2" type="text" id="tbProducto" />
                 <label class="control-label">Precio:</label>
                 <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" />
                 <label class="control-label">Cantidad:</label>
                 <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" />
-                <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
+                <button type="button" class="btn btn-default" id="btnAgregar" onclick="AddDetails()">Agregar</button>
             </div>
         </div>
         <div class="table-responsive">
@@ -41,7 +41,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Articulo</th>
+                        <th>Producto</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Sub-Total</th>
@@ -58,8 +58,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="button" class="btn btn-default" id="btnCrear" onclick="ArmarCotizacion()">Crear</button>
-                <button type="button" class="btn btn-default" id="btnLimpiar" onclick="LimpiarCampos()">Limpiar</button>
+                <button type="button" class="btn btn-default" id="btnCrear" onclick="CreateCot()">Crear</button>
             </div>
         </div>
     </div>
@@ -76,43 +75,41 @@
             format: 'dd/mm/yyyy',
             autoclose: true
         });
-        function ArmarDetalle(CotizacionId) {
+        function CreateDetails(CotizacionId) {
             var detalles = new Array();
 
             $('#tbBody tr').each(function () {
                 var cotId = CotizacionId;
-                var artId = 1;
-                var art = $(this).find('td').eq(1).html();
-                var prec = $(this).find('td').eq(2).html();
-                var c = $(this).find('td').eq(3).html();
-                var st = $(this).find('td').eq(4).html();
+                var proId = 1;
+                var pro = $(this).find('td').eq(1).html();
+                var can = $(this).find('td').eq(2).html();
+                var sto = $(this).find('td').eq(3).html();
                 detalles.push(
                     {
                         CotizacionDetalleId: 0,
                         CotizacionId: cotId,
-                        ArticuloId: artId,
-                        Articulo: art,
-                        Cantidad: c,
-                        PrecXund: prec,
-                        SubTotal: st
+                        ProductoId: proId,
+                        Producto: pro,
+                        Cantidad: can,
+                        SubTotal: sto
                     });
             });
             console.log(detalles);
-            EnviarDetalle(detalles);
+            SentDetails(detalles);
         }
-        function AgregarDetalle() {
+        function AddDetails() {
             var long = $("#tbBody tr").length;
 
             var monto = $('#tbMonto').val();
 
-            var articulo = $("#tbArticulo").val();
+            var producto = $("#tbProducto").val();
             var precio = $("#tbPrecio").val();
             var cantidad = $("#tbCantidad").val();
             var subTotal = precio * cantidad;
 
             var fila = "<tr>";
             fila += "<td>" + (long + 1) + "</td>";
-            fila += "<td>" + articulo + "</td>";
+            fila += "<td>" + producto + "</td>";
             fila += "<td>" + precio + "</td>";
             fila += "<td>" + cantidad + "</td>";
             fila += "<td>" + subTotal + "</td>";
@@ -124,46 +121,46 @@
 
             $('#tbMonto').val(monto);
 
-            LimpiarCamposDetalle();
+            Clear();
         }
-        function EnviarDetalle(detail) {
+        function SentDetails(detail) {
             var pack = JSON.stringify(detail);
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: pack,
                 cache: false,
-                url: "/CotizacionDetalles/Guardar",
+                url: "/CotizacionDetalles/Save",
                 success: function (data) {
                     if (!data) {
-                        alert("No se pudo almacenar el detalle...");
+                        alert("No can save cotizacion details");
                     }
                     else {
-                        LimpiarCampos();
+                        Limpiar();  
                     }
                 },
                 error: function (result) {
-                    alert("Ha fallado el registro del articulo: " + result);
+                    alert("No can add the product: " + result);
                 }
             });
         }
-        function EnviarCotizacion(cotizacion) {
+        function SendCot(cotizacion) {
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: "{cotizacion:" + JSON.stringify(cotizacion) + "}",
-                url: "/Cotizaciones/Guardar",
+                url: "/Cotizaciones/Save",
                 success: function (id) {
                     if (parseInt(id) > 0) {
-                        ArmarDetalle(id);
+                        CreateDetails(id);
                     }
                     else {
-                        alert("No se pudo almacenar la cotización...");
+                        alert("");
                     }
                 }
             });
         }
-        function ArmarCotizacion() {
+        function CreateCot() {
             var cli = $('#tbCliente').val();
             var date = $('#dpFecha').val();
             var monto = $('#tbMonto').val();
@@ -173,18 +170,18 @@
                 Fecha: date,
                 Monto: monto
             }
-            EnviarCotizacion(cotizacion);
+            SendCot(cotizacion);
         }
-        function LimpiarCamposDetalle() {
-            $("#tbArticulo").val("");
+        function Clear() {
+            $("#tbProducto").val("");
             $("#tbPrecio").val("");
             $("#tbCantidad").val("");
         }
-        function LimpiarCampos() {
+        function Limpiar() {
             $('#tbCliente').val("");
             $('#dpFecha').val("");
             $('#tbMonto').val("0");
-            LimpiarCamposDetalle();
+            Clear();
             $('#tbBody tr').remove();
         }
     </script>

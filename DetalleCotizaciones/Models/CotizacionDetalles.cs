@@ -13,13 +13,11 @@ namespace DetalleCotizaciones.Models
 
         public int CotizacionId { get; set; }
 
-        public int ArticuloId { get; set; }
+        public int ProductoId { get; set; }
 
-        public string Articulo { get; set; }
+        public string Producto { get; set; }
 
         public int Cantidad { get; set; }
-
-        public double PrecXund { get; set; }
 
         public double SubTotal { get; set; }
 
