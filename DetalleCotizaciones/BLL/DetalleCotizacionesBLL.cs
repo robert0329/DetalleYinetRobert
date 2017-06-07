@@ -2,15 +2,15 @@
 using DetalleCotizaciones.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Web;
 
 namespace DetalleCotizaciones.BLL
 {
     public class DetalleCotizacionesBLL
     {
-        public static bool Guardar(CotizacionesDetalle detalle)
+        public static bool Guardar(CotizacionDetalles detalle)
         {
             bool resultado = false;
             using (var conexion = new CotizacionesDb())
@@ -29,9 +29,64 @@ namespace DetalleCotizaciones.BLL
             }
             return resultado;
         }
-        public static List<CotizacionesDetalle> Listar()
+        public static CotizacionDetalles Buscar(int? detalleCotizacionId)
         {
-            List<CotizacionesDetalle> listado = null;
+            CotizacionDetalles detalle = null;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    detalle = conexion.Cotice.Find(detalleCotizacionId);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return detalle;
+        }
+        public static bool Modificar(CotizacionDetalles detalle)
+        {
+            bool resultado = false;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    conexion.Entry(detalle).State = EntityState.Modified;
+                    conexion.SaveChanges();
+                    resultado = true;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return resultado;
+        }
+        public static bool Eliminar(CotizacionDetalles detalle)
+        {
+            bool resultado = false;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    conexion.Entry(detalle).State = EntityState.Deleted;
+                    conexion.SaveChanges();
+                    resultado = true;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return resultado;
+        }
+        public static List<CotizacionDetalles> Listar()
+        {
+            List<CotizacionDetalles> listado = null;
             using (var conexion = new CotizacionesDb())
             {
                 try
@@ -46,12 +101,13 @@ namespace DetalleCotizaciones.BLL
             }
             return listado;
         }
-        public static bool Insertar(List<CotizacionesDetalle> detalles)
+
+        public static bool Guardar(List<CotizacionDetalles> detalles)
         {
             bool resultado = false;
             try
             {
-                foreach (CotizacionesDetalle detail in detalles)
+                foreach (CotizacionDetalles detail in detalles)
                 {
                     resultado = Guardar(detail);
                 }

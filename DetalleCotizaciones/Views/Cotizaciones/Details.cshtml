@@ -1,39 +1,30 @@
 ﻿@model DetalleCotizaciones.Models.Cotizaciones
-
 @{
     ViewBag.Title = "Details";
 }
-
 <h2>Details</h2>
-
 <div>
     <h4>Cotizaciones</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Cliente.Nombres)
+            @Html.DisplayNameFor(model => model.Cliente)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Cliente.Nombres)
+            @Html.DisplayFor(model => model.Cliente)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Fecha)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Fecha)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Monto)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Monto)
         </dd>
-
     </dl>
 </div>
 <p>

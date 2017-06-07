@@ -11,73 +11,14 @@ namespace DetalleCotizaciones.BLL
 {
     public class CotizacionesBLL
     {
-        //public static Cotizaciones Guardar(Cotizaciones Cot)
-        //{
-        //    Cotizaciones guardar = null;
-        //    using (var repositorio = new Repositorio<Cotizaciones>())
-        //    {
-        //        return guardar = repositorio.Guardar(Cot);
-        //    }
-        //}
-        //public static bool Mofidicar(Cotizaciones cotizacion)
-        //{
-        //    bool Mod = false;
-        //    using (var repositorio = new Repositorio<Cotizaciones>())
-        //    {
-        //        return Mod = repositorio.Modificar(cotizacion);
-        //    }
-        //}
-        //public static bool Eliminar(Cotizaciones cotizacion)
-        //{
-        //    bool Eli = false;
-        //    using (var repositorio = new Repositorio<Cotizaciones>())
-        //    {
-        //        return Eli = repositorio.Eliminar(cotizacion);
-        //    }
-        //}
-        //public static Cotizaciones Buscar(Expression<Func<Cotizaciones, bool>> tipo)
-        //{
-        //    Cotizaciones Result = null;
-
-        //    using (var repositorio = new Repositorio<Cotizaciones>())
-        //    {
-        //        Result = repositorio.Buscar(tipo);
-
-        //        if (Result != null)
-        //            Result.Deta.Count();
-        //    }
-        //    return Result;
-        //}
-        public static bool Guardar(Cotizaciones nuevo)
+        public static bool Guardar(Cotizaciones cotizacion)
         {
             bool resultado = false;
             using (var conexion = new CotizacionesDb())
             {
                 try
                 {
-                    var c = Buscar(nuevo.ClienteId);
-                    if (c == null)
-                        conexion.cotizacion.Add(nuevo);
-                    else
-                        conexion.Entry(nuevo).State = EntityState.Modified;
-                    conexion.SaveChanges();
-                    resultado = true;
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }
-            return resultado;
-        }
-        public static bool Eliminar(Cotizaciones existente)
-        {
-            bool resultado = false;
-            using (var conexion = new CotizacionesDb())
-            {
-                try
-                {
-                    conexion.Entry(existente).State = EntityState.Deleted;
+                    conexion.Cotizacion.Add(cotizacion);
                     conexion.SaveChanges();
                     resultado = true;
                 }
@@ -87,17 +28,16 @@ namespace DetalleCotizaciones.BLL
                     throw;
                 }
             }
-
             return resultado;
         }
-        public static Cotizaciones Buscar(int Id)
+        public static Cotizaciones Buscar(int? cotizacionId)
         {
-            var cc = new Cotizaciones();
+            Cotizaciones cotizacion = null;
             using (var conexion = new CotizacionesDb())
             {
                 try
                 {
-                    cc = conexion.cotizacion.Find(Id);
+                    cotizacion = conexion.Cotizacion.Find(cotizacionId);
                 }
                 catch (Exception)
                 {
@@ -105,18 +45,18 @@ namespace DetalleCotizaciones.BLL
                     throw;
                 }
             }
-
-            return cc;
+            return cotizacion;
         }
-
-        public static List<Cotizaciones> GetLista()
+        public static bool Modificar(Cotizaciones cotizacion)
         {
-            var lista = new List<Cotizaciones>();
+            bool resultado = false;
             using (var conexion = new CotizacionesDb())
             {
                 try
                 {
-                    lista = conexion.cotizacion.ToList();
+                    conexion.Entry(cotizacion).State = EntityState.Modified;
+                    conexion.SaveChanges();
+                    resultado = true;
                 }
                 catch (Exception)
                 {
@@ -124,18 +64,43 @@ namespace DetalleCotizaciones.BLL
                     throw;
                 }
             }
-            return lista;
-
+            return resultado;
         }
-        public static List<Cotizaciones> GetListaId(int Id)
+        public static bool Eliminar(Cotizaciones cotizacion)
         {
-            List<Cotizaciones> list = new List<Cotizaciones>();
+            bool resultado = false;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    conexion.Entry(cotizacion).State = EntityState.Deleted;
+                    conexion.SaveChanges();
+                    resultado = true;
+                }
+                catch (Exception)
+                {
 
-            var db = new CotizacionesDb();
+                    throw;
+                }
+            }
+            return resultado;
+        }
+        public static List<Cotizaciones> Listar()
+        {
+            List<Cotizaciones> listado = null;
+            using (var conexion = new CotizacionesDb())
+            {
+                try
+                {
+                    listado = conexion.Cotizacion.ToList();
+                }
+                catch (Exception)
+                {
 
-            list = db.cotizacion.Where(p => p.CotizacionId == Id).ToList();
-
-            return list;
+                    throw;
+                }
+            }
+            return listado;
         }
     }
 }

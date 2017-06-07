@@ -18,7 +18,7 @@ namespace DetalleCotizaciones.Controllers
         // GET: Cotizaciones
         public ActionResult Index()
         {
-            return View(BLL.CotizacionesBLL.GetLista());
+            return View(BLL.CotizacionesBLL.Listar());
         }
 
         // GET: Cotizaciones/Details/5
@@ -28,7 +28,7 @@ namespace DetalleCotizaciones.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cotizaciones cotizaciones = db.cotizacion.Find(id);
+            Cotizaciones cotizaciones = BLL.CotizacionesBLL.Buscar(id);
             if (cotizaciones == null)
             {
                 return HttpNotFound();
@@ -39,16 +39,16 @@ namespace DetalleCotizaciones.Controllers
         // GET: Cotizaciones/Create
         public ActionResult Create()
         {
-            ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombres");
+            ViewBag.Detail = new List<CotizacionDetalles>();
             return View();
         }
 
         // POST: Cotizaciones/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CotizacionId,Fecha,ClienteId,Monto,Descripcion")] Cotizaciones cotizaciones)
+        public ActionResult Create([Bind(Include = "CotizacionId,Cliente,Fecha,Monto")] Cotizaciones cotizaciones)
         {
             if (ModelState.IsValid)
             {
@@ -56,8 +56,24 @@ namespace DetalleCotizaciones.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombres", cotizaciones.ClienteId);
             return View(cotizaciones);
+        }
+
+        public JsonResult Guardar(Cotizaciones cotizacion)
+        {
+            int id = 0;
+            if (ModelState.IsValid)
+            {
+                if (BLL.CotizacionesBLL.Guardar(cotizacion))
+                {
+                    id = cotizacion.CotizacionId;
+                }
+            }
+            else
+            {
+                id = +1;
+            }
+            return Json(id, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Cotizaciones/Edit/5
@@ -67,29 +83,26 @@ namespace DetalleCotizaciones.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cotizaciones cotizaciones = db.cotizacion.Find(id);
+            Cotizaciones cotizaciones = BLL.CotizacionesBLL.Buscar(id);
             if (cotizaciones == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombres", cotizaciones.ClienteId);
             return View(cotizaciones);
         }
 
         // POST: Cotizaciones/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CotizacionId,Fecha,ClienteId,Monto,Descripcion")] Cotizaciones cotizaciones)
+        public ActionResult Edit([Bind(Include = "CotizacionId,Cliente,Fecha,Monto")] Cotizaciones cotizaciones)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(cotizaciones).State = EntityState.Modified;
-                db.SaveChanges();
+                BLL.CotizacionesBLL.Modificar(cotizaciones);
                 return RedirectToAction("Index");
             }
-            ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombres", cotizaciones.ClienteId);
             return View(cotizaciones);
         }
 
@@ -100,7 +113,7 @@ namespace DetalleCotizaciones.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cotizaciones cotizaciones = db.cotizacion.Find(id);
+            Cotizaciones cotizaciones = BLL.CotizacionesBLL.Buscar(id);
             if (cotizaciones == null)
             {
                 return HttpNotFound();
@@ -113,27 +126,11 @@ namespace DetalleCotizaciones.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Cotizaciones cotizaciones = db.cotizacion.Find(id);
-            db.cotizacion.Remove(cotizaciones);
-            db.SaveChanges();
+            Cotizaciones cotizaciones = BLL.CotizacionesBLL.Buscar(id);
+            BLL.CotizacionesBLL.Eliminar(cotizaciones);
             return RedirectToAction("Index");
         }
-        public JsonResult Insertar(Cotizaciones cotizacion)
-        {
-            int id = 0;
-            if (ModelState.IsValid)
-            {
-                if (BLL.CotizacionesBLL.Guardar(cotizacion))
-                {
-                    id = cotizacion.CotizacionId;
-                }
-            }
-            else
-            {
-                id = -1;
-            }
-            return Json(id, JsonRequestBehavior.AllowGet);
-        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -3,9 +3,7 @@
 @{
     ViewBag.Title = "Create";
 }
-
 <h2>Create</h2>
-
 
 @using (Html.BeginForm())
 {
@@ -21,7 +19,6 @@
                 <input class="form-control col-sm-5" type="text" id="tbCliente" />
             </div>
         </div>
-
         <div class="form-group">
             <label class="control-label col-1">Fecha:</label>
             <div class="col-md-10">
@@ -30,12 +27,10 @@
         </div>
         <div class="form-group" size="100">
             <div class="form-group col-12">
-                <label class="control-label">Producto:</label>
-                <input class="form-control input-group-sm col-2" type="text" id="tbProducto" />
-
+                <label class="control-label">Articulo:</label>
+                <input class="form-control input-group-sm col-2" type="text" id="tbArticulo" />
                 <label class="control-label">Precio:</label>
                 <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" />
-
                 <label class="control-label">Cantidad:</label>
                 <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" />
                 <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
@@ -46,7 +41,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Producto</th>
+                        <th>Articulo</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Sub-Total</th>
@@ -69,11 +64,9 @@
         </div>
     </div>
 }
-
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/bootstrap-datepicker.js"></script>
@@ -112,7 +105,7 @@
 
             var monto = $('#tbMonto').val();
 
-            var articulo = $("#tbProducto").val();
+            var articulo = $("#tbArticulo").val();
             var precio = $("#tbPrecio").val();
             var cantidad = $("#tbCantidad").val();
             var subTotal = precio * cantidad;
@@ -140,7 +133,7 @@
                 contentType: "application/json; charset=utf-8",
                 data: pack,
                 cache: false,
-                url: "/CotizacionesDetalles/Insertar",
+                url: "/CotizacionDetalles/Guardar",
                 success: function (data) {
                     if (!data) {
                         alert("No se pudo almacenar el detalle...");
@@ -159,7 +152,7 @@
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: "{cotizacion:" + JSON.stringify(cotizacion) + "}",
-                url: "/Cotizaciones/Insertar",
+                url: "/Cotizaciones/Guardar",
                 success: function (id) {
                     if (parseInt(id) > 0) {
                         ArmarDetalle(id);
@@ -183,7 +176,7 @@
             EnviarCotizacion(cotizacion);
         }
         function LimpiarCamposDetalle() {
-            $("#tbProducto").val("");
+            $("#tbArticulo").val("");
             $("#tbPrecio").val("");
             $("#tbCantidad").val("");
         }

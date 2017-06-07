@@ -13,8 +13,8 @@ namespace DetalleCotizaciones.Models
         [Key]
         public int CotizacionId { get; set; }
 
-        [Required(ErrorMessage = "Campo es obligatorio")]
-        public int ClienteId { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Cliente { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime Fecha { get; set; }
@@ -22,9 +22,9 @@ namespace DetalleCotizaciones.Models
         [DataType(DataType.Currency)]
         public double Monto { get; set; }
 
-        public virtual Productos product { get; set; }
-        public virtual Clientes Cliente { get; set; }
-        public virtual ICollection<CotizacionesDetalle> Detalle { get; set; }
+        //public virtual Productos product { get; set; }
+        //public virtual Clientes Cliente { get; set; }
+        //public virtual ICollection<CotizacionesDetalle> Detalle { get; set; }
 
         public Cotizaciones()
         {
